@@ -2,7 +2,6 @@
 from django.http import HttpResponse
 from django.db.models.query import QuerySet
 from django.test import TestCase
-from StringIO import StringIO
 import mock
 import pytest
 import factory
@@ -10,6 +9,21 @@ from openpyxl import Workbook
 
 from spreadsheetresponsemixin import SpreadsheetResponseMixin
 from .models import MockModel
+
+
+import sys
+VER = sys.version_info
+
+if VER[0] == 3:
+    from io import BytesIO, StringIO
+    basestring = str
+    unicode = str
+
+else:
+    from StringIO import StringIO
+    BytesIO = StringIO
+    basestring = basestring
+    unicode = unicode
 
 
 class MockModelFactory(factory.django.DjangoModelFactory):

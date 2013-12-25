@@ -1,9 +1,16 @@
 from django.http import HttpResponse
 from django.db.models.query import QuerySet
 from openpyxl import Workbook
-from StringIO import StringIO
-import csv
 
+import sys
+VER = sys.version_info
+
+if VER[0] == 3:
+    from io import StringIO
+    import csv
+else:
+    from StringIO import StringIO
+    import unicodecsv as csv
 
 class SpreadsheetResponseMixin(object):
 
@@ -97,11 +104,11 @@ class SpreadsheetResponseMixin(object):
         writer = csv.writer(generated_csv, dialect='excel')
         # Put in headers
         if headers:
-            writer.writerow([unicode(s).encode('utf-8') for s in headers])
+            writer.writerow([s for s in headers])
 
         # Put in data
         for row in data:
-            writer.writerow([unicode(s).encode('utf-8') for s in row])
+            writer.writerow([s for s in row])
         return generated_csv
 
     def get_render_method(self, format):
